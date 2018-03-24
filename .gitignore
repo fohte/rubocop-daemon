@@ -1,11 +1,36 @@
-/.bundle/
-/.yardoc
-/_yardoc/
+*.gem
+*.rbc
+/.config
 /coverage/
-/doc/
+/InstalledFiles
 /pkg/
 /spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
 /tmp/
 
-# rspec failure tracking
-.rspec_status
+## Specific to RubyMotion:
+.dat*
+.repl_history
+build/
+*.bridgesupport
+build-iPhoneOS/
+build-iPhoneSimulator/
+
+## Documentation cache and generated files:
+/.yardoc/
+/_yardoc/
+/doc/
+/rdoc/
+
+## Environment normalization:
+/.bundle/
+/vendor/bundle
+/lib/bundler/man/
+
+Gemfile.lock
+.ruby-version
+.ruby-gemset
+
+.rvmrc

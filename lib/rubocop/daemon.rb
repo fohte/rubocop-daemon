@@ -1,4 +1,4 @@
-require "rubocop/daemon/version"
+require 'rubocop/daemon/version'
 
 module RuboCop
   module Daemon

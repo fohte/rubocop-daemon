@@ -5,7 +5,7 @@ require "rubocop/daemon/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "rubocop-daemon"
-  spec.version       = Rubocop::Daemon::VERSION
+  spec.version       = RuboCop::Daemon::VERSION
   spec.authors       = ["Hayato Kawai"]
   spec.email         = ["fohte.hk@gmail.com"]
 

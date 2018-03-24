@@ -1,6 +1,6 @@
-RSpec.describe Rubocop::Daemon do
+RSpec.describe RuboCop::Daemon do
   it "has a version number" do
-    expect(Rubocop::Daemon::VERSION).not_to be nil
+    expect(RuboCop::Daemon::VERSION).not_to be nil
   end
 
   it "does something useful" do

@@ -1,6 +1,6 @@
 require "rubocop/daemon/version"
 
-module Rubocop
+module RuboCop
   module Daemon
     # Your code goes here...
   end

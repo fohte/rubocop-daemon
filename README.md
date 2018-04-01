@@ -1,34 +1,44 @@
-# RuboCop::Daemon
+# rubocop-daemon
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rubocop/daemon`. To experiment with that code, run `bin/console` for an interactive prompt.
+`rubocop-daemon` makes RuboCop faster.
 
-TODO: Delete this and the text above, and describe your gem
+**This tool is beta version.**
 
 ## Installation
 
-Add this line to your application's Gemfile:
+`rubocop-daemon` is not released on rubygems.org yet, but you can try `rubocop-daemon`:
 
-```ruby
-gem 'rubocop-daemon'
+```sh
+git clone https://github.com/fohte/rubocop-daemon.git && cd rubocop-daemon
+bundle install
+bundle exec rake install
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install rubocop-daemon
 
 ## Usage
 
-TODO: Write usage instructions here
+To start the server, just run:
 
-## Development
+```sh
+rubocop-daemon start
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Then you can execute RuboCop fast:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```sh
+rubocop-daemon exec
+```
+
+And you can pass files:
+
+```sh
+rubocop-daemon exec foo.rb bar.rb
+```
+
+If you want to pass arguments to RuboCop, you should separate arguments by `--`:
+
+```sh
+rubocop-daemon exec -- --auto-correct
+```
 
 ## Contributing
 

@@ -40,6 +40,22 @@ If you want to pass arguments to RuboCop, you should separate arguments by `--`:
 rubocop-daemon exec -- --auto-correct
 ```
 
+## Commands
+
+You can control the server like this:
+
+```
+rubocop-daemon <command>
+```
+
+Available commands:
+
+* `start`: start the server
+* `stop`: stop the server
+* `status`: print out whether the server is currently running
+* `restart`: restart the server
+* `exec [file1, file2, ...] [-- [rubocop-options]]`: invoke `rubocop` with the given `rubocop-options`
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/fohte/rubocop-daemon.

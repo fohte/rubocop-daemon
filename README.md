@@ -56,6 +56,14 @@ Available commands:
 * `restart`: restart the server
 * `exec [file1, file2, ...] [-- [rubocop-options]]`: invoke `rubocop` with the given `rubocop-options`
 
+## More speed
+
+If you're really into performance and want the lowest possible latency, talk to the `rubocop-daemon` server with netcat:
+
+```sh
+echo "$(cat ~/.cache/rubocop-daemon/token) $PWD exec [rubocop-options]" | nc localhost $(cat ~/.cache/rubocop-daemon/port)
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/fohte/rubocop-daemon.

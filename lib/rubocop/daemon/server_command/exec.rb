@@ -5,10 +5,7 @@ module RuboCop
     module ServerCommand
       class Exec < Base
         def run
-          options, files = RuboCop::Options.new.parse(@args)
-          config_store = RuboCop::ConfigStore.new
-
-          RuboCop::Runner.new(options, config_store).run(files)
+          RuboCop::CLI.new.run(@args)
         rescue SystemExit # rubocop:disable Lint/HandleExceptions
         end
       end

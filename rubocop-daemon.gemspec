@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Hayato Kawai']
   spec.email         = ['fohte.hk@gmail.com']
 
-  spec.summary       = ''
-  spec.description   = ''
+  spec.summary       = 'Makes RuboCop faster'
+  spec.description   = 'rubocop-daemon is a CLI tool that makes RuboCop faster.'
   spec.homepage      = 'https://github.com/fohte/rubocop-daemon'
   spec.license       = 'MIT'
 

@@ -1,17 +1,15 @@
 # rubocop-daemon
 
-`rubocop-daemon` makes RuboCop faster.
+[![Gem](https://img.shields.io/gem/v/rubocop-daemon.svg)](https://rubygems.org/gems/rubocop-daemon)
 
-**This tool is beta version.**
+`rubocop-daemon` makes RuboCop faster.
 
 ## Installation
 
-`rubocop-daemon` is not released on rubygems.org yet, but you can try `rubocop-daemon`:
+Install `rubocop-daemon` via rubygems.org:
 
 ```sh
-git clone https://github.com/fohte/rubocop-daemon.git && cd rubocop-daemon
-bundle install
-bundle exec rake install
+gem install rubocop-daemon
 ```
 
 ## Usage

@@ -23,6 +23,12 @@ module RuboCop
         dir.join('pid')
       end
 
+      def self.pid_running?
+        Process.kill 0, pid_path.read.to_i
+      rescue Errno::ESRCH
+        false
+      end
+
       def self.make_server_file(port:, token:)
         port_path.write(port)
         token_path.write(token)

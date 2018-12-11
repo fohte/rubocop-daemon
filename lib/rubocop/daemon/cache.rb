@@ -6,8 +6,8 @@ module RuboCop
   module Daemon
     class Cache
       def self.dir
-        Pathname.new(File.expand_path('~/.cache/rubocop-daemon')).tap do |d|
-          d.mkdir unless d.exist?
+        Pathname.new(File.join(File.expand_path('~/.cache/rubocop-daemon'), Dir.pwd[1..-1].tr('/', '+'))).tap do |d|
+          d.mkpath unless d.exist?
         end
       end
 

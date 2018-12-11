@@ -6,8 +6,9 @@ module RuboCop
       Request = Struct.new(:header, :body)
       Header = Struct.new(:token, :cwd, :command, :args)
 
-      def initialize(socket)
+      def initialize(socket, verbose)
         @socket = socket
+        @verbose = verbose
       end
 
       def read!
@@ -25,6 +26,7 @@ module RuboCop
       private
 
       def parse_request(content)
+        puts content if @verbose
         raw_header, *body = content.lines
         Request.new(parse_header(raw_header), body.join)
       end

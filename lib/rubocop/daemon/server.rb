@@ -7,12 +7,14 @@ require 'securerandom'
 module RuboCop
   module Daemon
     class Server
+      attr_reader :verbose
+
       def self.token
         @token ||= SecureRandom.hex(4)
       end
 
-      def self.start(port)
-        new.start(port)
+      def initialize(verbose)
+        @verbose = verbose
       end
 
       def token
@@ -21,24 +23,30 @@ module RuboCop
 
       def start(port)
         require 'rubocop'
-        @server = TCPServer.open('127.0.0.1', port)
-
+        start_server(port)
+        Process.daemon(true) unless verbose
         Cache.make_server_file(port: @server.addr[1], token: token) do
-          Process.daemon(true)
           read_socket(@server.accept) until @server.closed?
         end
       end
 
       private
 
+      def start_server(port)
+        @server = TCPServer.open('127.0.0.1', port)
+        puts "Server listen on port #{@server.addr[1]}" if verbose
+      end
+
       def read_socket(socket)
-        SocketReader.new(socket).read!
+        SocketReader.new(socket, verbose).read!
       rescue InvalidTokenError
         socket.puts 'token is not valid.'
       rescue ServerStopRequest
         @server.close
       rescue UnknownServerCommandError => e
         socket.puts e.message
+      rescue Errno::EPIPE => e
+        p e if verbose
       rescue StandardError => e
         socket.puts e.full_message
       ensure

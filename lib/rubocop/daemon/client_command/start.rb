@@ -6,7 +6,7 @@ module RuboCop
       class Start < Base
         def run
           parser.parse(@argv)
-          Server.new.start(@options.fetch(:port, 0))
+          Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
         end
 
         private
@@ -16,6 +16,7 @@ module RuboCop
             p.banner = 'usage: rubocop-daemon start [options]'
 
             p.on('-p', '--port [PORT]') { |v| @options[:port] = v }
+            p.on('--no-daemon', 'Starts server in foreground with debug information') { @options[:no_daemon] = true }
           end
         end
       end

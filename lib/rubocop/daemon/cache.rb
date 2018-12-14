@@ -6,8 +6,8 @@ module RuboCop
   module Daemon
     class Cache
       def self.dir
-        Pathname.new(File.expand_path('~/.cache/rubocop-daemon')).tap do |d|
-          d.mkdir unless d.exist?
+        Pathname.new(File.join(File.expand_path('~/.cache/rubocop-daemon'), Dir.pwd[1..-1].tr('/', '+'))).tap do |d|
+          d.mkpath unless d.exist?
         end
       end
 
@@ -21,6 +21,12 @@ module RuboCop
 
       def self.pid_path
         dir.join('pid')
+      end
+
+      def self.pid_running?
+        Process.kill 0, pid_path.read.to_i
+      rescue Errno::ESRCH
+        false
       end
 
       def self.make_server_file(port:, token:)

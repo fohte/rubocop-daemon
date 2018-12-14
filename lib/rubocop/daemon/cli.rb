@@ -15,6 +15,7 @@ module RuboCop
       def run(argv = ARGV)
         parser.order!(argv)
         return if argv.empty?
+
         create_subcommand_instance(argv)
       rescue OptionParser::InvalidOption => e
         warn "error: #{e.message}"

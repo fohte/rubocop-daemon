@@ -13,7 +13,7 @@ module RuboCop
     autoload :SocketReader, 'rubocop/daemon/socket_reader'
 
     def self.running?
-      Cache.dir.exist?
+      Cache.dir.exist? && Cache.pid_path.file? && Cache.pid_running?
     end
   end
 end

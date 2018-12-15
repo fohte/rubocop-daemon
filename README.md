@@ -56,10 +56,10 @@ Available commands:
 
 ## More speed
 
-`rubocop-daemon-wrapper` is a bash script that talks to the `rubocop-daemon` server via netcat, and this provides the lowest possible latency.
+`rubocop-daemon-wrapper` is a bash script that talks to the `rubocop-daemon` server via `netcat`. This provides much lower latency than the `rubocop-daemon` Ruby script.
 
 Unfortunately `rubygems` will wrap any executables with a Ruby script, and [there is no way to disable this behavior](https://github.com/rubygems/rubygems/issues/88).
-So you must manually download and install this bash script:
+You must manually download and install the bash script:
 
 ```
 curl https://raw.githubusercontent.com/fohte/rubocop-daemon/master/bin/rubocop-daemon-wrapper -o /tmp/rubocop-daemon-wrapper

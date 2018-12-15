@@ -1,11 +1,25 @@
 #!/bin/bash
 set -e
 
-CACHE_BASE_DIR="$HOME/.cache/rubocop-daemon"
-CACHE_KEY="$(echo ${PWD:1} | tr '/' '+')"
-CACHE_DIR="$CACHE_BASE_DIR/$CACHE_KEY"
-TOKEN_PATH="$CACHE_DIR/token"
-PORT_PATH="$CACHE_DIR/port"
+find_project_root() {
+  path=$(pwd)
+  while [[ "$path" != "" && ! -f "$path/Gemfile" && ! -f "$path/gems.rb" ]]; do
+    path=${path%/*}
+  done
+  echo "$path"
+}
+
+PROJECT_ROOT="$(find_project_root)"
+if [ -z "$PROJECT_ROOT" ]; then
+  echo "Could not find Gemfile or gems.rb in $PWD or any parent directories!" >&2
+  exit 1
+fi
+
+CACHE_DIR="$HOME/.cache/rubocop-daemon"
+PROJECT_CACHE_KEY="$(echo ${PROJECT_ROOT:1} | tr '/' '+')"
+PROJECT_CACHE_DIR="$CACHE_DIR/$PROJECT_CACHE_KEY"
+TOKEN_PATH="$PROJECT_CACHE_DIR/token"
+PORT_PATH="$PROJECT_CACHE_DIR/port"
 if [ ! -f "$TOKEN_PATH" ]; then
   echo "rubocop-daemon: server is not running. Starting..." >&2
   rubocop-daemon start

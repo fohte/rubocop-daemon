@@ -20,6 +20,8 @@ PROJECT_CACHE_KEY="$(echo ${PROJECT_ROOT:1} | tr '/' '+')"
 PROJECT_CACHE_DIR="$CACHE_DIR/$PROJECT_CACHE_KEY"
 TOKEN_PATH="$PROJECT_CACHE_DIR/token"
 PORT_PATH="$PROJECT_CACHE_DIR/port"
+STATUS_PATH="$PROJECT_CACHE_DIR/status"
+
 if [ ! -f "$TOKEN_PATH" ]; then
   echo "rubocop-daemon: server is not running. Starting..." >&2
   rubocop-daemon start
@@ -29,7 +31,10 @@ run_rubocop_command() {
   TOKEN="$(cat "$TOKEN_PATH")"
   PORT="$(cat "$PORT_PATH")"
   COMMAND="$TOKEN $PWD exec $@"
-  echo "$COMMAND" | nc localhost "$PORT"
+  if echo "$COMMAND" | nc localhost "$PORT"; then
+    exit "$(cat $STATUS_PATH)"
+  fi
+  return 1
 }
 
 if ! run_rubocop_command $@; then

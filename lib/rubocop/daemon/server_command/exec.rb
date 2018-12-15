@@ -7,12 +7,14 @@ module RuboCop
         def run
           # RuboCop output is colorized by default where there is a TTY.
           # We must pass the --color option to preserve this behavior.
-          unless %w[--color --no-color].any? { |f| @args.include?(f) }
-            @args.unshift('--color')
-          end
-
-          RuboCop::CLI.new.run(@args)
-        rescue SystemExit # rubocop:disable Lint/HandleExceptions
+          @args.unshift('--color') unless %w[--color --no-color].any? { |f| @args.include?(f) }
+          status = RuboCop::CLI.new.run(@args)
+          # This status file is read by `rubocop-daemon exec` and `rubocop-daemon-wrapper`,
+          # so that they use the correct exit code.
+          # Status is 1 when there are any issues, and 0 otherwise.
+          Cache.write_status_file(status)
+        rescue SystemExit
+          Cache.write_status_file(1)
         end
       end
     end

@@ -45,6 +45,10 @@ module RuboCop
           dir.join('pid')
         end
 
+        def status_path
+          dir.join('status')
+        end
+
         def pid_running?
           Process.kill 0, pid_path.read.to_i
         rescue Errno::ESRCH
@@ -61,6 +65,10 @@ module RuboCop
           yield
         ensure
           dir.rmtree
+        end
+
+        def write_status_file(status)
+          status_path.write(status)
         end
       end
     end

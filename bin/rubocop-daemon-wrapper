@@ -31,8 +31,14 @@ run_rubocop_command() {
   TOKEN="$(cat "$TOKEN_PATH")"
   PORT="$(cat "$PORT_PATH")"
   COMMAND="$TOKEN $PWD exec $@"
+  rm -f "$STATUS_PATH" # Clear the previous status
   if echo "$COMMAND" | nc localhost "$PORT"; then
-    exit "$(cat $STATUS_PATH)"
+    if [ -f "$STATUS_PATH" ]; then
+      exit "$(cat $STATUS_PATH)"
+    else
+      echo "rubocop-daemon: server did not write status to $STATUS_PATH!" >&2
+      exit 1
+    fi
   fi
   return 1
 }

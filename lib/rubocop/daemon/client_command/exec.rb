@@ -7,6 +7,7 @@ module RuboCop
         def run
           args = parser.parse(@argv)
           ensure_server!
+          Cache.status_path.delete if Cache.status_path.file?
           send_request(
             command: 'exec',
             args: args,

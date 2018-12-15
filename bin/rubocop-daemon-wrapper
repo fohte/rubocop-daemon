@@ -20,10 +20,17 @@ PROJECT_CACHE_KEY="$(echo ${PROJECT_ROOT:1} | tr '/' '+')"
 PROJECT_CACHE_DIR="$CACHE_DIR/$PROJECT_CACHE_KEY"
 TOKEN_PATH="$PROJECT_CACHE_DIR/token"
 PORT_PATH="$PROJECT_CACHE_DIR/port"
+STDIN_PATH="$PROJECT_CACHE_DIR/stdin"
 STATUS_PATH="$PROJECT_CACHE_DIR/status"
 
+# If -s or --stdin args are present, read stdin with `cat`
+for ARG in $@; do
+  if [ -z "$STDIN_CONTENT" ] && [ "$ARG" == "--stdin" ] || [ "$ARG" == "-s" ]; then
+    STDIN_CONTENT="\n$(cat)"
+  fi
+done
+
 if [ ! -f "$TOKEN_PATH" ]; then
-  echo "rubocop-daemon: server is not running. Starting..." >&2
   rubocop-daemon start
 fi
 
@@ -32,11 +39,11 @@ run_rubocop_command() {
   PORT="$(cat "$PORT_PATH")"
   COMMAND="$TOKEN $PWD exec $@"
   rm -f "$STATUS_PATH" # Clear the previous status
-  if echo "$COMMAND" | nc localhost "$PORT"; then
+  if echo -e "$COMMAND${STDIN_CONTENT}" | nc localhost "$PORT"; then
     if [ -f "$STATUS_PATH" ]; then
       exit "$(cat $STATUS_PATH)"
     else
-      echo "rubocop-daemon: server did not write status to $STATUS_PATH!" >&2
+      echo "rubocop-daemon-wrapper: server did not write status to $STATUS_PATH!" >&2
       exit 1
     fi
   fi
@@ -44,10 +51,10 @@ run_rubocop_command() {
 }
 
 if ! run_rubocop_command $@; then
-  echo "Error sending command to localhost:$PORT ($COMMAND)" >&2
+  echo "rubocop-daemon-wrapper: Error sending command to localhost:$PORT ($COMMAND)" >&2
   echo "Killing all rubocop-daemon processes and removing cache directory..." >&2
-  pkill "rubocop-daemon "
   rm -rf "$CACHE_DIR"
+  pkill "rubocop-daemon "
   echo "Starting new rubocop-daemon server..." >&2
   rubocop-daemon start
   if ! run_rubocop_command $@; then

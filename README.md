@@ -48,11 +48,11 @@ rubocop-daemon <command>
 
 Available commands:
 
-* `start`: start the server
-* `stop`: stop the server
-* `status`: print out whether the server is currently running
-* `restart`: restart the server
-* `exec [file1, file2, ...] [-- [rubocop-options]]`: invoke `rubocop` with the given `rubocop-options`
+- `start`: start the server
+- `stop`: stop the server
+- `status`: print out whether the server is currently running
+- `restart`: restart the server
+- `exec [file1, file2, ...] [-- [rubocop-options]]`: invoke `rubocop` with the given `rubocop-options`
 
 ## More speed
 
@@ -81,7 +81,18 @@ To use `rubocop-daemon-wrapper` with the [VS Code RuboCop extension](https://git
 sudo ln -fs /usr/local/bin/rubocop-daemon-wrapper /usr/local/bin/rubocop
 ```
 
-Then set the `ruby.rubocop.executePath` option to `/usr/local/bin`. Now VS Code will use the `rubocop-daemon-wrapper` script, and `formatOnSave` will be much faster (< 200ms instead of 3-5 seconds).
+Unfortunately, the [vscode-ruby extension doesn't really allow you to customize the rubocop path or binary](https://github.com/rubyide/vscode-ruby/issues/413). (You can change the linter, but not the formatter.)
+
+So in the meantime, you might want to just override the rubocop binary with a symlink:
+
+```bash
+$ which rubocop
+# => /Users/username/.rvm/gems/ruby-2.5.3/bin/rubocop
+
+$ ln -fs /usr/local/bin/rubocop-daemon-wrapper /Users/username/.rvm/gems/ruby-2.5.3/bin/rubocop
+```
+
+Now VS Code will use the `rubocop-daemon-wrapper` script, and `formatOnSave` will be much faster (< 200ms instead of 3-5 seconds).
 
 ## Contributing
 

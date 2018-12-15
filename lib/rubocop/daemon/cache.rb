@@ -16,10 +16,8 @@ module RuboCop
 
             current_dir = File.expand_path('..', current_dir)
           end
-
-          raise GemfileNotFound,
-                "Could not find Gemfile or gems.rb in #{Dir.pwd} " \
-                'or any parent directories!'
+          # If we can't find a Gemfile, just use the current directory
+          Dir.pwd
         end
 
         def project_dir_cache_key

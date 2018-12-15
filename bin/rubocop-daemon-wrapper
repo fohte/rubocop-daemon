@@ -2,7 +2,7 @@
 set -e
 
 find_project_root() {
-  path=$(pwd)
+  path=$(pwd -P)
   while [[ "$path" != "" && ! -f "$path/Gemfile" && ! -f "$path/gems.rb" ]]; do
     path=${path%/*}
   done
@@ -11,8 +11,8 @@ find_project_root() {
 
 PROJECT_ROOT="$(find_project_root)"
 if [ -z "$PROJECT_ROOT" ]; then
-  echo "Could not find Gemfile or gems.rb in $PWD or any parent directories!" >&2
-  exit 1
+  # If we can't find a Gemfile, just use the current directory
+  PROJECT_ROOT="$(pwd -P)"
 fi
 
 CACHE_DIR="$HOME/.cache/rubocop-daemon"
@@ -37,7 +37,7 @@ fi
 run_rubocop_command() {
   TOKEN="$(cat "$TOKEN_PATH")"
   PORT="$(cat "$PORT_PATH")"
-  COMMAND="$TOKEN $PWD exec $@"
+  COMMAND="$TOKEN $PROJECT_ROOT exec $@"
   rm -f "$STATUS_PATH" # Clear the previous status
   if echo -e "$COMMAND${STDIN_CONTENT}" | nc localhost "$PORT"; then
     if [ -f "$STATUS_PATH" ]; then

@@ -25,6 +25,24 @@ if [ ! -f "$TOKEN_PATH" ]; then
   rubocop-daemon start
 fi
 
-TOKEN="$(cat "$TOKEN_PATH")"
-PORT="$(cat "$PORT_PATH")"
-echo "$TOKEN $PWD exec $@" | nc localhost "$PORT"
+run_rubocop_command() {
+  TOKEN="$(cat "$TOKEN_PATH")"
+  PORT="$(cat "$PORT_PATH")"
+  COMMAND="$TOKEN $PWD exec $@"
+  echo "$COMMAND" | nc localhost "$PORT"
+}
+
+if ! run_rubocop_command $@; then
+  echo "Error sending command to localhost:$PORT ($COMMAND)" >&2
+  echo "Killing all rubocop-daemon processes and removing cache directory..." >&2
+  pkill "rubocop-daemon start"
+  rm -rf "$CACHE_DIR"
+  echo "Starting new rubocop-daemon server..." >&2
+  rubocop-daemon start
+  if ! run_rubocop_command $@; then
+    echo "Sorry, something went wrong with rubocop-daemon!" >&2
+    echo "Please try updating the gem or re-installing the rubocop-daemon-wrapper script."
+    echo "If that doesn't work, please open an issue on GitHub:" \
+      "https://github.com/fohte/rubocop-daemon/issues/new" >&2
+  fi
+fi

@@ -54,7 +54,7 @@ if ! run_rubocop_command $@; then
   echo "rubocop-daemon-wrapper: Error sending command to localhost:$PORT ($COMMAND)" >&2
   echo "Killing all rubocop-daemon processes and removing cache directory..." >&2
   rm -rf "$CACHE_DIR"
-  pkill "rubocop-daemon "
+  pkill -f "rubocop-daemon (re)?start"
   echo "Starting new rubocop-daemon server..." >&2
   rubocop-daemon start
   if ! run_rubocop_command $@; then

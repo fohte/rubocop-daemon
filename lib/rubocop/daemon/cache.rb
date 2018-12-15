@@ -45,14 +45,27 @@ module RuboCop
           dir.join('pid')
         end
 
+        def lock_path
+          dir.join('lock')
+        end
+
         def status_path
           dir.join('status')
         end
 
         def pid_running?
-          Process.kill 0, pid_path.read.to_i
+          Process.kill(0, pid_path.read.to_i) == 1
         rescue Errno::ESRCH
           false
+        end
+
+        def acquire_lock
+          lock_file = File.open(lock_path, File::CREAT)
+          flock_result = lock_file.flock(File::LOCK_EX | File::LOCK_NB)
+          yield flock_result == 0
+        ensure
+          lock_file.flock(File::LOCK_UN)
+          lock_file.close
         end
 
         def write_port_and_token_files(port:, token:)

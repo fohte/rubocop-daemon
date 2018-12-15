@@ -2,6 +2,8 @@
 
 module RuboCop
   module Daemon
+    TIMEOUT = 20
+
     autoload :VERSION, 'rubocop/daemon/version'
 
     autoload :CLI, 'rubocop/daemon/cli'
@@ -14,6 +16,17 @@ module RuboCop
 
     def self.running?
       Cache.dir.exist? && Cache.pid_path.file? && Cache.pid_running?
+    end
+
+    def self.wait_for_running_status!(expected)
+      start_time = Time.now
+      while Daemon.running? != expected
+        sleep 0.1
+        next unless Time.now - start_time > TIMEOUT
+
+        warn "running? was not #{expected} after #{TIMEOUT} seconds!"
+        exit 1
+      end
     end
   end
 end

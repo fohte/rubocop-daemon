@@ -26,8 +26,12 @@ module RuboCop
       private
 
       def parse_request(content)
-        puts content if @verbose
         raw_header, *body = content.lines
+        if @verbose
+          puts raw_header.to_s
+          puts "STDIN: #{body.size} lines" if body.any?
+        end
+
         Request.new(parse_header(raw_header), body.join)
       end
 

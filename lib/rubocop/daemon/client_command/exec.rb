@@ -6,7 +6,7 @@ module RuboCop
       class Exec < Base
         def run
           args = parser.parse(@argv)
-          check_running_server!
+          ensure_server!
           send_request(
             command: 'exec',
             args: args,

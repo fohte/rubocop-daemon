@@ -23,9 +23,6 @@ module RuboCop
       rescue UnknownClientCommandError => e
         warn "rubocop-daemon: #{e.message}. See 'rubocop-daemon --help'."
         exit 1
-      rescue ServerIsNotRunningError
-        warn 'rubocop-daemon: server is not running.'
-        exit 1
       end
 
       def parser

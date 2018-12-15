@@ -29,9 +29,12 @@ module RuboCop
         false
       end
 
-      def self.make_server_file(port:, token:)
+      def self.write_port_and_token_files(port:, token:)
         port_path.write(port)
         token_path.write(token)
+      end
+
+      def self.write_pid_file
         pid_path.write(Process.pid)
         yield
       ensure

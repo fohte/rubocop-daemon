@@ -56,11 +56,32 @@ Available commands:
 
 ## More speed
 
-If you're really into performance and want the lowest possible latency, talk to the `rubocop-daemon` server with netcat:
+`rubocop-daemon-wrapper` is a bash script that talks to the `rubocop-daemon` server via netcat, and this provides the lowest possible latency.
 
-```sh
-echo "$(cat ~/.cache/rubocop-daemon/token) $PWD exec [rubocop-options]" | nc localhost $(cat ~/.cache/rubocop-daemon/port)
+Unfortunately `rubygems` will wrap any executables with a Ruby script, and [there is no way to disable this behavior](https://github.com/rubygems/rubygems/issues/88).
+So you must manually download and install this bash script:
+
 ```
+curl https://raw.githubusercontent.com/fohte/rubocop-daemon/master/bin/rubocop-daemon-wrapper -o /tmp/rubocop-daemon-wrapper
+sudo mv /tmp/rubocop-daemon-wrapper /usr/local/bin/rubocop-daemon-wrapper
+sudo chmod +x /usr/local/bin/rubocop-daemon-wrapper
+```
+
+You can then replace any calls to `rubocop` with `rubocop-daemon-wrapper`.
+
+```
+rubocop-daemon-wrapper foo.rb bar.rb
+```
+
+`rubocop-daemon-wrapper` will automatically start the daemon server if it is not already running.
+
+To use `rubocop-daemon-wrapper` with the [VS Code RuboCop extension](https://github.com/misogi/vscode-ruby-rubocop), add a `rubocop` symlink in `/usr/local/bin`:
+
+```bash
+sudo ln -fs /usr/local/bin/rubocop-daemon-wrapper /usr/local/bin/rubocop
+```
+
+Then set the `ruby.rubocop.executePath` option to `/usr/local/bin`. Now VS Code will use the `rubocop-daemon-wrapper` script, and `formatOnSave` will be much faster (< 200ms instead of 3-5 seconds).
 
 ## Contributing
 

@@ -24,8 +24,9 @@ module RuboCop
       def start(port)
         require 'rubocop'
         start_server(port)
+        Cache.write_port_and_token_files(port: @server.addr[1], token: token)
         Process.daemon(true) unless verbose
-        Cache.make_server_file(port: @server.addr[1], token: token) do
+        Cache.write_pid_file do
           read_socket(@server.accept) until @server.closed?
         end
       end

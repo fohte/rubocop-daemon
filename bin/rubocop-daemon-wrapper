@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+CACHE_BASE_DIR="$HOME/.cache/rubocop-daemon"
+CACHE_KEY="$(echo ${PWD:1} | tr '/' '+')"
+CACHE_DIR="$CACHE_BASE_DIR/$CACHE_KEY"
+TOKEN_PATH="$CACHE_DIR/token"
+PORT_PATH="$CACHE_DIR/port"
+if [ ! -f "$TOKEN_PATH" ]; then
+  echo "rubocop-daemon: server is not running. Starting..." >&2
+  rubocop-daemon start
+fi
+
+TOKEN="$(cat "$TOKEN_PATH")"
+PORT="$(cat "$PORT_PATH")"
+echo "$TOKEN $PWD exec $@" | nc localhost "$PORT"

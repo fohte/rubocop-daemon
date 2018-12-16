@@ -5,8 +5,22 @@ module RuboCop
     module ClientCommand
       class Start < Base
         def run
-          parser.parse(@argv)
-          Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
+          if Daemon.running?
+            warn 'rubocop-daemon: server is already running.'
+            return
+          end
+
+          Cache.acquire_lock do |locked|
+            unless locked
+              # Another process is already starting the daemon,
+              # so wait for it to be ready.
+              Daemon.wait_for_running_status!(true)
+              exit 0
+            end
+
+            parser.parse(@argv)
+            Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
+          end
         end
 
         private

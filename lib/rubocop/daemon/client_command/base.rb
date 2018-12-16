@@ -25,8 +25,16 @@ module RuboCop
           end
         end
 
-        def check_running_server!
-          raise ServerIsNotRunningError unless Daemon.running?
+        def check_running_server
+          Daemon.running?.tap do |running|
+            warn 'rubocop-daemon: server is not running.' unless running
+          end
+        end
+
+        def ensure_server!
+          return if check_running_server
+
+          ClientCommand::Start.new([]).run
         end
       end
     end

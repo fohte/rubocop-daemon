@@ -6,9 +6,9 @@ module RuboCop
       class Restart < Base
         def run
           parser.parse(@argv)
-          check_running_server!
-          send_request(command: 'stop')
-          Server.new.start(@options.fetch(:port, 0))
+
+          ClientCommand::Stop.new([]).run
+          ClientCommand::Start.new(@argv).run
         end
 
         private

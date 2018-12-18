@@ -1,6 +1,30 @@
 #!/bin/bash
 set -e
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  NETCAT_CMD="nc -N"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  NETCAT_CMD="nc"
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+  # https://www.freebsd.org/cgi/man.cgi?query=netcat&manpath=SuSE+Linux/i386+11.3
+  NETCAT_CMD="nc"
+else
+  echo "Sorry, we're not sure if the rubocop-daemon-wrapper script will work" \
+    "on your OS: \"$OSTYPE\"" >&2
+  echo "Try to comment out this message in the script, and use one of the following:" >&2
+  echo >&2
+  echo "NETCAT_CMD=\"nc\"" >&2
+  echo "# Or" >&2
+  echo "NETCAT_CMD=\"nc -N\"" >&2
+  echo >&2
+  echo "Then please leave a comment on this GitHub issue and" \
+    "let us know which one worked:" >&2
+  echo >&2
+  echo "* https://github.com/fohte/rubocop-daemon/issues/4" >&2
+  echo >&2
+  exit 1
+fi
+
 find_project_root() {
   path=$(pwd -P)
   while [[ "$path" != "" && ! -f "$path/Gemfile" && ! -f "$path/gems.rb" ]]; do
@@ -39,7 +63,7 @@ run_rubocop_command() {
   PORT="$(cat "$PORT_PATH")"
   COMMAND="$TOKEN $PROJECT_ROOT exec $@"
   rm -f "$STATUS_PATH" # Clear the previous status
-  if echo -e "$COMMAND${STDIN_CONTENT}" | nc localhost "$PORT"; then
+  if echo -e "$COMMAND${STDIN_CONTENT}" | $NETCAT_CMD localhost "$PORT"; then
     if [ -f "$STATUS_PATH" ]; then
       exit "$(cat $STATUS_PATH)"
     else

@@ -59,8 +59,9 @@ module RuboCop
 
         def acquire_lock
           lock_file = File.open(lock_path, File::CREAT)
+          # flock returns 0 if successful, and false if not.
           flock_result = lock_file.flock(File::LOCK_EX | File::LOCK_NB)
-          yield flock_result.zero?
+          yield flock_result != false
         ensure
           lock_file.flock(File::LOCK_UN)
           lock_file.close

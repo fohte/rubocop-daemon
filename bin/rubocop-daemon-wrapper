@@ -50,7 +50,7 @@ STATUS_PATH="$PROJECT_CACHE_DIR/status"
 # If -s or --stdin args are present, read stdin with `cat`
 for ARG in $@; do
   if [ -z "$STDIN_CONTENT" ] && [ "$ARG" == "--stdin" ] || [ "$ARG" == "-s" ]; then
-    STDIN_CONTENT="\n$(cat)"
+    STDIN_CONTENT="$(cat)"
   fi
 done
 
@@ -63,7 +63,7 @@ run_rubocop_command() {
   PORT="$(cat "$PORT_PATH")"
   COMMAND="$TOKEN $PROJECT_ROOT exec $@"
   rm -f "$STATUS_PATH" # Clear the previous status
-  if echo -e "$COMMAND${STDIN_CONTENT}" | $NETCAT_CMD localhost "$PORT"; then
+  if printf '%s\n%s' "$COMMAND" "$STDIN_CONTENT" | $NETCAT_CMD localhost "$PORT"; then
     if [ -f "$STATUS_PATH" ]; then
       exit "$(cat $STATUS_PATH)"
     else

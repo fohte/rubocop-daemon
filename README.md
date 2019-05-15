@@ -104,6 +104,27 @@ $ ln -fs /usr/local/bin/rubocop-daemon-wrapper $HOME/.rbenv/versions/x.y.z/bin/r
 
 Now VS Code will use the `rubocop-daemon-wrapper` script, and `formatOnSave` should be much faster (~150ms instead of 3-5 seconds).
 
+## Use with Neovim/Vim8 and ALE
+
+[ALE](https://github.com/w0rp/ale) setting example:
+
+```vim
+" Use `rubocop-daemon-wrapper` instead of `rubocop`
+let g:ale_ruby_rubocop_executable = 'rubocop-daemon-wrapper'
+```
+
+Auto-correct on save setting example:
+
+```vim
+" optional: Set fixer(not only linter).
+let g:ale_fixers = {
+\   'ruby': ['rubocop'],
+\}
+
+" optional: Auto-correct on save.
+let g:ale_fix_on_save = 1
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/fohte/rubocop-daemon.

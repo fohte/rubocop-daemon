@@ -2,7 +2,11 @@
 set -e
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  NETCAT_CMD="nc -N"
+  if [ -f "/etc/fedora-release" ]; then
+    NETCAT_CMD="nc"
+  else
+    NETCAT_CMD="nc -N"
+  fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   NETCAT_CMD="nc"
 elif [[ "$OSTYPE" == "freebsd"* ]]; then

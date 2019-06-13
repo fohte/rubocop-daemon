@@ -54,7 +54,9 @@ STATUS_PATH="$PROJECT_CACHE_DIR/status"
 # If -s or --stdin args are present, read stdin with `cat`
 for ARG in $@; do
   if [ -z "$STDIN_CONTENT" ] && [ "$ARG" == "--stdin" ] || [ "$ARG" == "-s" ]; then
-    STDIN_CONTENT="$(cat)"
+    # Preserve final new lines when ingesting from STDIN
+    STDIN_CONTENT="$(cat; printf x)"
+    STDIN_CONTENT=${STDIN_CONTENT%x}
   fi
 done
 

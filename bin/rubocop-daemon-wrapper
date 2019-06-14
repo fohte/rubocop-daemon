@@ -50,6 +50,29 @@ TOKEN_PATH="$PROJECT_CACHE_DIR/token"
 PORT_PATH="$PROJECT_CACHE_DIR/port"
 STDIN_PATH="$PROJECT_CACHE_DIR/stdin"
 STATUS_PATH="$PROJECT_CACHE_DIR/status"
+LOCK_PATH="$CACHE_DIR/running.lock"
+
+# If a lock file exist, wait up to 5 seconds.
+i=0
+while [ -d "$LOCK_PATH" ]; do
+  echo "rubocop-daemon-wrapper: rubocop-daemon is processing a request; pausing before trying again..." >&2
+  sleep 1
+  i=$((i + 1))
+  if [ $i -ge 5 ]; then
+    echo "rubocop-daemon-wrapper: Waited more than 5 seconds; ignoring the lock and proceeding." >&2
+    break
+  fi
+done
+
+unlock() {
+  rm -r "$LOCK_PATH" 2> /dev/null
+}
+
+trap unlock EXIT
+
+# Acquire a file lock before proceeding.
+# Macs don't support the `lockfile` command, so just use mkdir.
+mkdir -p "$LOCK_PATH"
 
 # If -s or --stdin args are present, read stdin with `cat`
 for ARG in $@; do

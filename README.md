@@ -12,6 +12,12 @@ Install `rubocop-daemon` via rubygems.org:
 gem install rubocop-daemon
 ```
 
+or if you install RuboCop using bundler, put this in your `Gemfile`:
+
+```ruby
+gem 'rubocop-daemon', require: false
+```
+
 ## Usage
 
 To start the server, just run:

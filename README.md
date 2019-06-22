@@ -76,7 +76,17 @@ rubocop-daemon-wrapper foo.rb bar.rb
 
 `rubocop-daemon-wrapper` will automatically start the daemon server if it is not already running. So the first call will be about the same as `rubocop`, but the second call will be much faster.
 
-## Use with VS Code
+### Use with Bundler
+
+If you install `rubocop-daemon` with bundler, you should set `RUBOCOP_DAEMON_USE_BUNDLER` environment variable:
+
+```console
+$ export RUBOCOP_DAEMON_USE_BUNDLER=true
+```
+
+Now `rubocop-daemon-wrapper` will call the `rubocop-daemon` command with `bundle exec`.
+
+### Use with VS Code
 
 Unfortunately, the [vscode-ruby extension doesn't really allow you to customize the `rubocop` path or binary](https://github.com/rubyide/vscode-ruby/issues/413). (You can change the linter path, but not the formatter.)
 
@@ -104,7 +114,7 @@ $ ln -fs /usr/local/bin/rubocop-daemon-wrapper $HOME/.rbenv/versions/x.y.z/bin/r
 
 Now VS Code will use the `rubocop-daemon-wrapper` script, and `formatOnSave` should be much faster (~150ms instead of 3-5 seconds).
 
-## Use with Neovim/Vim8 and ALE
+### Use with Neovim/Vim8 and ALE
 
 [ALE](https://github.com/w0rp/ale) setting example:
 

@@ -52,6 +52,12 @@ STDIN_PATH="$PROJECT_CACHE_DIR/stdin"
 STATUS_PATH="$PROJECT_CACHE_DIR/status"
 LOCK_PATH="$CACHE_DIR/running.lock"
 
+if [ -n "$RUBOCOP_DAEMON_USE_BUNDLER" ]; then
+  RUBOCOP_DAEMON="bundle exec rubocop-daemon"
+else
+  RUBOCOP_DAEMON="rubocop-daemon"
+fi
+
 # If a lock file exist, wait up to 5 seconds.
 i=0
 while [ -d "$LOCK_PATH" ]; do
@@ -84,7 +90,7 @@ for ARG in $@; do
 done
 
 if [ ! -f "$TOKEN_PATH" ]; then
-  rubocop-daemon start
+  $RUBOCOP_DAEMON start
 fi
 
 run_rubocop_command() {
@@ -109,7 +115,7 @@ if ! run_rubocop_command $@; then
   rm -rf "$CACHE_DIR"
   pkill -f "rubocop-daemon (re)?start"
   echo "Starting new rubocop-daemon server..." >&2
-  rubocop-daemon start
+  $RUBOCOP_DAEMON start
   if ! run_rubocop_command $@; then
     echo "Sorry, something went wrong with rubocop-daemon!" >&2
     echo "Please try updating the gem or re-installing the rubocop-daemon-wrapper script."

@@ -28,7 +28,7 @@ module RuboCop
           raise "rubocop-daemon: Could not find status file at: #{Cache.status_path}" unless Cache.status_path.file?
 
           status = Cache.status_path.read
-          raise "rubocop-daemon: '#{status}' is not a valid status!" unless status.match?(/^\d+$/)
+          raise "rubocop-daemon: '#{status}' is not a valid status!" if (status =~ /^\d+$/).nil?
 
           exit status.to_i
         end

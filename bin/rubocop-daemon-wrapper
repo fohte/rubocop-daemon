@@ -8,7 +8,7 @@ if [ -n "$RUBOCOP_DAEMON_USE_BUNDLER" ]; then
   COMMAND_PREFIX="bundle exec"
 fi
 
-if ! command -v rubocop-daemon; then
+if ! command -v rubocop-daemon > /dev/null; then
   $COMMAND_PREFIX rubocop $@
   exit $?
 fi

@@ -1,5 +1,17 @@
 #!/bin/bash
+
 set -e
+
+COMMAND_PREFIX=""
+
+if [ -n "$RUBOCOP_DAEMON_USE_BUNDLER" ]; then
+  COMMAND_PREFIX="bundle exec"
+fi
+
+if ! command -v rubocop-daemon; then
+  $COMMAND_PREFIX rubocop $@
+  exit $?
+fi
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   if [ -f "/etc/fedora-release" ]; then
@@ -51,12 +63,7 @@ PORT_PATH="$PROJECT_CACHE_DIR/port"
 STDIN_PATH="$PROJECT_CACHE_DIR/stdin"
 STATUS_PATH="$PROJECT_CACHE_DIR/status"
 LOCK_PATH="$CACHE_DIR/running.lock"
-
-if [ -n "$RUBOCOP_DAEMON_USE_BUNDLER" ]; then
-  RUBOCOP_DAEMON="bundle exec rubocop-daemon"
-else
-  RUBOCOP_DAEMON="rubocop-daemon"
-fi
+RUBOCOP_DAEMON="$COMMAND_PREFIX rubocop-daemon"
 
 # If a lock file exist, wait up to 5 seconds.
 i=0

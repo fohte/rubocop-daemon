@@ -64,21 +64,25 @@ Available commands:
 
 `rubocop-daemon-wrapper` is a bash script that talks to the `rubocop-daemon` server via `netcat`. This provides much lower latency than the `rubocop-daemon` Ruby script.
 
-For now, you have to manually download and install the bash script:
+You will need to manually download and install the bash script:
 
-> (`rubygems` will wrap any executable files with a Ruby script, and [you can't disable this behavior](https://github.com/rubygems/rubygems/issues/88).)
+> (Unfortunately [this cannot be done automatically with `rubygems`](https://github.com/rubygems/rubygems/issues/88).)
 
 ```
 curl https://raw.githubusercontent.com/fohte/rubocop-daemon/master/bin/rubocop-daemon-wrapper -o /tmp/rubocop-daemon-wrapper
-sudo mv /tmp/rubocop-daemon-wrapper /usr/local/bin/rubocop-daemon-wrapper
-sudo chmod +x /usr/local/bin/rubocop-daemon-wrapper
+sudo mkdir -p /usr/local/bin/rubocop-daemon-wrapper
+sudo mv /tmp/rubocop-daemon-wrapper /usr/local/bin/rubocop-daemon-wrapper/rubocop
+sudo chmod +x /usr/local/bin/rubocop-daemon-wrapper/rubocop
 ```
 
-You can then replace any calls to `rubocop` with `rubocop-daemon-wrapper`.
+Add `/usr/local/bin/rubocop-daemon-wrapper` to the beginning of your `PATH`:
 
+```bash
+# ~/.bashrc
+export PATH="/usr/local/bin/rubocop-daemon-wrapper:$PATH"
 ```
-rubocop-daemon-wrapper foo.rb bar.rb
-```
+
+Now the `rubocop` wrapper command will always be used by default.
 
 `rubocop-daemon-wrapper` will automatically start the daemon server if it is not already running. So the first call will be about the same as `rubocop`, but the second call will be much faster.
 

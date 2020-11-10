@@ -145,6 +145,25 @@ let g:ale_fixers = {
 let g:ale_fix_on_save = 1
 ```
 
+### Use with RubyMine
+
+RubyMine expects a Ruby script, so you can replace your `rvm which rubocop` or `rbenv which rubocop` with:
+
+```
+require 'open3'
+
+stdout_str, error_str, status = Open3.capture3(
+  '/usr/local/bin/rubocop-daemon-wrapper',
+  *ARGV,
+  stdin_data: STDIN
+)
+
+STDOUT.write stdout_str
+STDERR.write error_str
+
+exit status.exitstatus
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/fohte/rubocop-daemon.

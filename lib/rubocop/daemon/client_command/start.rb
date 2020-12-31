@@ -19,7 +19,10 @@ module RuboCop
             end
 
             parser.parse(@argv)
-            Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
+            Server.new(@options.fetch(:no_daemon, false)).start(
+              @options.fetch(:host, '127.0.0.1'),
+              @options.fetch(:port, 0),
+            )
           end
         end
 
@@ -30,6 +33,7 @@ module RuboCop
             p.banner = 'usage: rubocop-daemon start [options]'
 
             p.on('-p', '--port [PORT]') { |v| @options[:port] = v }
+            p.on('-b', '--binding [IP]') { |v| @options[:host] = v }
             p.on('--no-daemon', 'Starts server in foreground with debug information') { @options[:no_daemon] = true }
           end
         end

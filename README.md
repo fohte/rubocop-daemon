@@ -98,31 +98,16 @@ Now `rubocop-daemon-wrapper` will call the `rubocop-daemon` command with `bundle
 
 ### Use with VS Code
 
-Unfortunately, the [vscode-ruby extension doesn't really allow you to customize the `rubocop` path or binary](https://github.com/rubyide/vscode-ruby/issues/413). (You can change the linter path, but not the formatter.)
+Install [vscode-rubocop](https://marketplace.visualstudio.com/items?itemName=misogi.ruby-rubocop) extension, and then add configs to your VS Code `settings.json`:
 
-In the meantime, you could just override the `rubocop` binary with a symlink to `rubocop-daemon-wrapper`:
-
-```bash
-# Find your rubocop path
-$ which rubocop
-<HOME>/.rvm/gems/ruby-x.y.z/bin/rubocop
-
-# Override rubocop with a symlink to rubocop-daemon-wrapper
-$ ln -fs /usr/local/bin/rubocop-daemon-wrapper $HOME/.rvm/gems/ruby-x.y.z/bin/rubocop
+```json
+"[ruby]": {
+  "editor.defaultFormatter": "misogi.ruby-rubocop"
+},
+"ruby.rubocop.executePath": "/usr/local/bin/rubocop-daemon-wrapper/",
 ```
 
-Or, if you use rbenv:
-
-```bash
-# which rubocop is rbenv running?
-$ rbenv which rubocop
-<HOME>/.rbenv/versions/x.y.z/bin/rubocop
-
-# Override rubocop with a symlink to rubocop-daemon-wrapper
-$ ln -fs /usr/local/bin/rubocop-daemon-wrapper $HOME/.rbenv/versions/x.y.z/bin/rubocop
-```
-
-Now VS Code will use the `rubocop-daemon-wrapper` script, and `formatOnSave` should be much faster (~150ms instead of 3-5 seconds).
+Now VS Code will use the `rubocop-daemon` script, and `formatOnSave` should be much faster (~150ms instead of 3-5 seconds).
 
 ### Use with Neovim/Vim8 and ALE
 

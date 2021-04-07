@@ -17,7 +17,11 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   if [ -f "/etc/fedora-release" ]; then
     NETCAT_CMD="nc"
   else
-    NETCAT_CMD="nc -N"
+    if nc -h 2>&1 | grep -q -- '\s-N\s'; then
+      NETCAT_CMD="nc -N"
+    else
+      NETCAT_CMD="nc"
+    fi
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   NETCAT_CMD="nc"

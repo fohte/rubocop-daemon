@@ -17,7 +17,7 @@ module RuboCop
         return if argv.empty?
 
         create_subcommand_instance(argv)
-      rescue OptionParser::InvalidOption => e
+      rescue OptionParser::InvalidOption, InvalidRuboCopVersionError => e
         warn "error: #{e.message}"
         exit 1
       rescue UnknownClientCommandError => e

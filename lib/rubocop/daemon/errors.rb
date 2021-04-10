@@ -7,5 +7,6 @@ module RuboCop
     class ServerStopRequest < StandardError; end
     class UnknownClientCommandError < StandardError; end
     class UnknownServerCommandError < StandardError; end
+    class InvalidRuboCopVersionError < StandardError; end
   end
 end

@@ -8,6 +8,12 @@ if [ -n "$RUBOCOP_DAEMON_USE_BUNDLER" ]; then
   COMMAND_PREFIX="bundle exec"
 fi
 
+RUBOCOP_DAEMON_OPTS=""
+
+if [ -n "$RUBOCOP_DAEMON_RUBOCOP_VERSION" ]; then
+  RUBOCOP_DAEMON_OPTS="--rubocop-version $RUBOCOP_DAEMON_RUBOCOP_VERSION"
+fi
+
 if ! command -v rubocop-daemon > /dev/null; then
   $COMMAND_PREFIX rubocop $@
   exit $?
@@ -97,7 +103,7 @@ for ARG in $@; do
 done
 
 if [ ! -f "$TOKEN_PATH" ]; then
-  $RUBOCOP_DAEMON start
+  $RUBOCOP_DAEMON start $RUBOCOP_DAEMON_OPTS
 fi
 
 run_rubocop_command() {
@@ -122,7 +128,7 @@ if ! run_rubocop_command $@; then
   rm -rf "$CACHE_DIR"
   pkill -f "rubocop-daemon (re)?start"
   echo "Starting new rubocop-daemon server..." >&2
-  $RUBOCOP_DAEMON start
+  $RUBOCOP_DAEMON start $RUBOCOP_DAEMON_OPTS
   if ! run_rubocop_command $@; then
     echo "Sorry, something went wrong with rubocop-daemon!" >&2
     echo "Please try updating the gem or re-installing the rubocop-daemon-wrapper script."

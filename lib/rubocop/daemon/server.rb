@@ -21,8 +21,8 @@ module RuboCop
         self.class.token
       end
 
-      def start(port)
-        require 'rubocop'
+      def start(port, rubocop_version)
+        require_rubocop(rubocop_version)
         start_server(port)
         Cache.write_port_and_token_files(port: @server.addr[1], token: token)
         Process.daemon(true) unless verbose
@@ -32,6 +32,19 @@ module RuboCop
       end
 
       private
+
+      def require_rubocop(version = nil)
+        begin
+          rubocop_path = Gem::Specification.find_by_name('rubocop', version).full_gem_path
+          rubocop_lib_path = File.join(rubocop_path, 'lib')
+          $LOAD_PATH.unshift(rubocop_lib_path) unless $LOAD_PATH.include?(rubocop_lib_path)
+        rescue Gem::MissingSpecVersionError => e
+          raise InvalidRuboCopVersionError,
+            "could not find '#{e.name}' (#{e.requirement}) - "\
+            "did find: [#{e.specs.map { |s| s.version.version }.join(', ')}]"
+        end
+        require 'rubocop'
+      end
 
       def start_server(port)
         @server = TCPServer.open('127.0.0.1', port)

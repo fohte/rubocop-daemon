@@ -19,7 +19,7 @@ module RuboCop
             end
 
             parser.parse(@argv)
-            Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
+            Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0), @options.fetch(:rubocop_version, nil))
           end
         end
 
@@ -31,6 +31,7 @@ module RuboCop
 
             p.on('-p', '--port [PORT]') { |v| @options[:port] = v }
             p.on('--no-daemon', 'Starts server in foreground with debug information') { @options[:no_daemon] = true }
+            p.on('--rubocop-version [VERSION]', 'The version of rubocop to use.') { |v| @options[:rubocop_version] = v }
           end
         end
       end

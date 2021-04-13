@@ -96,6 +96,18 @@ $ export RUBOCOP_DAEMON_USE_BUNDLER=true
 
 Now `rubocop-daemon-wrapper` will call the `rubocop-daemon` command with `bundle exec`.
 
+### Use with a specific version of RuboCop
+
+If you have multiple versions of RuboCop installed, you can set `RUBOCOP_DAEMON_RUBOCOP_VERSION` environment variable to the specific version you want `rubocop-daemon` to use:
+
+```console
+$ export RUBOCOP_DAEMON_RUBOCOP_VERSION=x.y.z
+```
+
+Now `rubocop-daemon-wrapper` will start `rubocop-daemon` with the specified version.
+
+> (Make sure you stop the server if it's already running before setting this environment variable.)
+
 ### Use with VS Code
 
 Unfortunately, the [vscode-ruby extension doesn't really allow you to customize the `rubocop` path or binary](https://github.com/rubyide/vscode-ruby/issues/413). (You can change the linter path, but not the formatter.)

@@ -21,9 +21,9 @@ module RuboCop
         self.class.token
       end
 
-      def start(port)
+      def start(port:, allow_external_access: false)
         require 'rubocop'
-        start_server(port)
+        start_server(port: port, allow_external_access: allow_external_access)
         Cache.write_port_and_token_files(port: @server.addr[1], token: token)
         Process.daemon(true) unless verbose
         Cache.write_pid_file do
@@ -33,9 +33,10 @@ module RuboCop
 
       private
 
-      def start_server(port)
-        @server = TCPServer.open('127.0.0.1', port)
-        puts "Server listen on port #{@server.addr[1]}" if verbose
+      def start_server(port:, allow_external_access: false)
+        address = allow_external_access ? '0.0.0.0' : '127.0.0.1'
+        @server = TCPServer.open(address, port)
+        puts "Server listen on #{address}:#{@server.addr[1]}" if verbose
       end
 
       def read_socket(socket)

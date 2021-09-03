@@ -19,7 +19,11 @@ module RuboCop
             end
 
             parser.parse(@argv)
-            Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
+
+            Server.new(@options.fetch(:no_daemon, false)).start(
+              port: @options.fetch(:port, 0),
+              allow_external_access: @options.fetch(:allow_external_access, false)
+            )
           end
         end
 
@@ -31,6 +35,9 @@ module RuboCop
 
             p.on('-p', '--port [PORT]') { |v| @options[:port] = v }
             p.on('--no-daemon', 'Starts server in foreground with debug information') { @options[:no_daemon] = true }
+            p.on('--allow-external-access', 'Allows other IPs to access the daemon') do
+              @options[:allow_external_access] = true
+            end
           end
         end
       end

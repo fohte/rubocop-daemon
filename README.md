@@ -107,8 +107,8 @@ In the meantime, you could just override the `rubocop` binary with a symlink to 
 $ which rubocop
 <HOME>/.rvm/gems/ruby-x.y.z/bin/rubocop
 
-# Override rubocop with a symlink to rubocop-daemon-wrapper
-$ ln -fs /usr/local/bin/rubocop-daemon-wrapper $HOME/.rvm/gems/ruby-x.y.z/bin/rubocop
+# Override rubocop with a symlink to rubocop-daemon-wrapper/rubocop
+$ ln -fs /usr/local/bin/rubocop-daemon-wrapper/rubocop $HOME/.rvm/gems/ruby-x.y.z/bin/rubocop
 ```
 
 Or, if you use rbenv:
@@ -118,8 +118,8 @@ Or, if you use rbenv:
 $ rbenv which rubocop
 <HOME>/.rbenv/versions/x.y.z/bin/rubocop
 
-# Override rubocop with a symlink to rubocop-daemon-wrapper
-$ ln -fs /usr/local/bin/rubocop-daemon-wrapper $HOME/.rbenv/versions/x.y.z/bin/rubocop
+# Override rubocop with a symlink to rubocop-daemon-wrapper/rubocop
+$ ln -fs /usr/local/bin/rubocop-daemon-wrapper/rubocop $HOME/.rbenv/versions/x.y.z/bin/rubocop
 ```
 
 Now VS Code will use the `rubocop-daemon-wrapper` script, and `formatOnSave` should be much faster (~150ms instead of 3-5 seconds).

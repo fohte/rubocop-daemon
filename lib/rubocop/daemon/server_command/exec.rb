@@ -6,6 +6,10 @@ module RuboCop
       class Exec < Base
         def run
           Cache.status_path.delete if Cache.status_path.file?
+          unless Cache.version_path.file?
+            Cache.version_path.write(Utils.versions(@args))
+          end
+
           # RuboCop output is colorized by default where there is a TTY.
           # We must pass the --color option to preserve this behavior.
           @args.unshift('--color') unless %w[--color --no-color].any? { |f| @args.include?(f) }

@@ -26,10 +26,8 @@ module RuboCop
         start_server(port)
         Cache.write_port_and_token_files(port: @server.addr[1], token: token)
         Cache.version_path.delete if Cache.version_path.file?
-        cli = RuboCop::CLI.new.run([*@args, '--verbose-version'])
-        Cache.version_path.write(
-          RuboCop::Version.version(debug: true, env: cli.instance_variable_get(:@env)).strip
-        )
+        Cache.config_path.delete if Cache.config_path.file?
+        Cache.config_path.write(Utils.config)
         Process.daemon(true) unless verbose
         Cache.write_pid_file do
           read_socket(@server.accept) until @server.closed?

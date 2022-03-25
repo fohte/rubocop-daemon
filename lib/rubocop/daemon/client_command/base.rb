@@ -33,18 +33,17 @@ module RuboCop
         end
 
         def server_up_to_date?
-          current_versions = StringIO.new
-          send_request(
-            command: 'exec',
-            args: ['--verbose-version', *@argv],
-            output: current_versions,
-          )
-          current_versions.rewind
-          current_versions = current_versions.read.strip
-          server_versions = Cache.version_path.file? ? Cache.version_path.read.strip : nil
-          (server_versions == current_versions).tap do |up_to_date|
-            warn 'rubocop-daemon: server is running an obsolete version' unless up_to_date
-          end
+          current_versions = Utils.versions(@argv)
+          server_versions = Cache.version_path.file? ? Cache.version_path.read : nil
+          versions_match = (server_versions == current_versions)
+          warn 'rubocop-daemon: server is running an obsolete version' unless versions_match
+
+          current_config = Utils.config
+          server_config = Cache.config_path.file? ? Cache.config_path.read : nil
+          config_match = (server_config == current_config)
+          warn 'rubocop-daemon: server is running an obsolete config' unless config_match
+
+          versions_match && config_match
         end
 
         def ensure_server!

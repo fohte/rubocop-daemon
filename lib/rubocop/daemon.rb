@@ -5,6 +5,7 @@ module RuboCop
     TIMEOUT = 20
 
     autoload :VERSION, 'rubocop/daemon/version'
+    autoload :Utils, 'rubocop/daemon/utils'
 
     autoload :CLI, 'rubocop/daemon/cli'
     autoload :Cache, 'rubocop/daemon/cache'

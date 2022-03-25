@@ -51,6 +51,10 @@ module RuboCop
           dir.join('status')
         end
 
+        def version_path
+          dir.join('version')
+        end
+
         def pid_running?
           Process.kill(0, pid_path.read.to_i) == 1
         rescue Errno::ESRCH

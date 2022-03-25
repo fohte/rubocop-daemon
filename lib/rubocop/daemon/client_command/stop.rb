@@ -5,7 +5,7 @@ module RuboCop
     module ClientCommand
       class Stop < Base
         def run
-          return unless check_running_server
+          return unless server_running?
 
           parser.parse(@argv)
           send_request(command: 'stop')

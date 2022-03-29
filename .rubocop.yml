@@ -1,5 +1,7 @@
 AllCops:
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.6
+  SuggestExtensions: false
+  NewCops: enable
 
 Style/FrozenStringLiteralComment:
   EnforcedStyle: always
@@ -16,7 +18,7 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/MethodLength:

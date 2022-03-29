@@ -35,7 +35,7 @@ module RuboCop
         def server_up_to_date?
           current_versions = Utils.versions(@argv)
           server_versions = Cache.version_path.file? ? Cache.version_path.read : nil
-          versions_match = (server_versions == current_versions)
+          versions_match = server_versions.nil? || (server_versions == current_versions)
           warn 'rubocop-daemon: server is running an obsolete version' unless versions_match
 
           current_config = Utils.config

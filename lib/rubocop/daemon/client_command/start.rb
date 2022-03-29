@@ -19,10 +19,7 @@ module RuboCop
             end
 
             parser.parse(@argv)
-            fork do
-              Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
-            end
-            Daemon.wait_for_running_status!(true)
+            Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
           end
         end
 

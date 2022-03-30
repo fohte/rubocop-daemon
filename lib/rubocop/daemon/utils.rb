@@ -10,6 +10,8 @@ module RuboCop
 
       def self.versions(args)
         cli = RuboCop::CLI.new
+        args = args.dup
+        args.delete('--')
         Helper.redirect(stdout: StringIO.new) do
           cli.run([*args, '--verbose-version'])
         end

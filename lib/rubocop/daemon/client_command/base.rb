@@ -17,12 +17,12 @@ module RuboCop
 
         private
 
-        def send_request(command:, args: [], body: '', output: STDOUT)
+        def send_request(command:, args: [], body: '')
           TCPSocket.open('127.0.0.1', Cache.port_path.read) do |socket|
             socket.puts [Cache.token_path.read, Dir.pwd, command, *args].shelljoin
             socket.write body
             socket.close_write
-            output.write socket.read(4096) until socket.eof?
+            STDOUT.write socket.read(4096) until socket.eof?
           end
         end
 

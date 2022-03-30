@@ -28,7 +28,6 @@ module RuboCop
         Cache.version_path.delete if Cache.version_path.file?
         Cache.config_path.delete if Cache.config_path.file?
         Cache.config_path.write(Utils.config)
-        Process.daemon(true) unless verbose
         Cache.write_pid_file do
           read_socket(@server.accept) until @server.closed?
         end

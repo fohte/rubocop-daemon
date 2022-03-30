@@ -11,15 +11,19 @@ module RuboCop
           end
 
           Cache.acquire_lock do |locked|
-            unless locked
-              # Another process is already starting the daemon,
-              # so wait for it to be ready.
-              Daemon.wait_for_running_status!(true)
-              exit 0
+            if locked
+              parser.parse(@argv)
+              verbose = @options.fetch(:no_daemon, false)
+              if verbose
+                Server.new(verbose).start(@options.fetch(:port, 0))
+              else
+                fork do
+                  Server.new(verbose).start(@options.fetch(:port, 0))
+                end
+              end
             end
 
-            parser.parse(@argv)
-            Server.new(@options.fetch(:no_daemon, false)).start(@options.fetch(:port, 0))
+            Daemon.wait_for_running_status!(true)
           end
         end
 

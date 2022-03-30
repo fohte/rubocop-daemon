@@ -18,6 +18,7 @@ module RuboCop
                 Server.new(verbose).start(@options.fetch(:port, 0))
               else
                 fork do
+                  Process.daemon(true)
                   Server.new(verbose).start(@options.fetch(:port, 0))
                 end
               end

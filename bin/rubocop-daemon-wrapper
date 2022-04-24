@@ -20,7 +20,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     NETCAT_CMD="nc -N"
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-  NETCAT_CMD="nc"
+  NETCAT_CMD="/usr/bin/nc"
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
   # https://www.freebsd.org/cgi/man.cgi?query=netcat&manpath=SuSE+Linux/i386+11.3
   NETCAT_CMD="nc"
